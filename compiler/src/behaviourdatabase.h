@@ -87,6 +87,8 @@ enum NpcBehaviourType_t
 	BEHAVIOUR_TYPE_BLESS, // add blessing to player
 	BEHAVIOUR_TYPE_CREATECONTAINER, // create a container of an item in particular
 	BEHAVIOUR_TYPE_TOWN, // change player town
+	BEHAVIOUR_TYPE_MESSAGE_TRANSFERTOPLAYERNAME_STATE, // set player name parsed fro message to string object and return state if it is possible to transfer
+	BEHAVIOUR_TYPE_MESSAGE_COUNT_NO_LIMIT
 };
 
 enum NpcBehaviourOperator_t
@@ -265,6 +267,7 @@ class BehaviourDatabase
 		int32_t checkOperation(Player* player, NpcBehaviourNode* node, const std::string& message);
 		int32_t searchDigit(const std::string& message);
 		bool searchWord(const std::string& pattern, const std::string& message);
+		int32_t searchDigitNoLimit(const std::string& message);
 
 		std::string parseResponse(Player* player, const std::string& message);
 		void attendCustomer(uint32_t playerId);

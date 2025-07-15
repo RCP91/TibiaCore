@@ -894,6 +894,15 @@ void IOLoginData::increaseBankBalance(uint32_t guid, uint64_t bankBalance)
 	Database::getInstance()->executeQuery(query.str());
 }
 
+void IOLoginData::increaseBankBalance(std::string name, uint64_t bankBalance)
+{
+	Database* db = Database::getInstance();
+
+	std::ostringstream query;
+	query << "UPDATE `players` SET `balance` = `balance` + " << bankBalance << " WHERE `name` = " << db->escapeString(name);
+	db->executeQuery(query.str());
+}
+
 bool IOLoginData::hasBiddedOnHouse(uint32_t guid)
 {
 	Database* db = Database::getInstance();
@@ -901,6 +910,20 @@ bool IOLoginData::hasBiddedOnHouse(uint32_t guid)
 	std::ostringstream query;
 	query << "SELECT `id` FROM `houses` WHERE `highest_bidder` = " << guid << " LIMIT 1";
 	return db->storeQuery(query.str()).get() != nullptr;
+}
+
+// Return 0 means player not found, 1 player is without vocation, 2 player with vocation
+uint16_t IOLoginData::canTransferMoneyToByName(const std::string& name)
+{
+	Database* db = Database::getInstance();
+
+	std::ostringstream query;
+	query << "SELECT `vocation` FROM `players` WHERE `name` = " << db->escapeString(name);
+	DBResult_ptr result = db->storeQuery(query.str());
+	if (!result) {
+		return 0;
+	}
+	return result->getNumber<uint16_t>("vocation") == 0 ? 1 : 2;
 }
 
 std::forward_list<VIPEntry> IOLoginData::getVIPEntries(uint32_t accountId)

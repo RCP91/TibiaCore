@@ -50,7 +50,8 @@ class IOLoginData
 		static bool formatPlayerName(std::string& name);
 		static void increaseBankBalance(uint32_t guid, uint64_t bankBalance);
 		static bool hasBiddedOnHouse(uint32_t guid);
-
+		static uint16_t canTransferMoneyToByName(const std::string& name);
+		static void increaseBankBalance(const std::string name, uint64_t bankBalance);
 		static std::forward_list<VIPEntry> getVIPEntries(uint32_t accountId);
 		static void addVIPEntry(uint32_t accountId, uint32_t guid);
 		static void removeVIPEntry(uint32_t accountId, uint32_t guid);

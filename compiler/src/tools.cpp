@@ -1141,3 +1141,24 @@ void getFilesInDirectory(const boost::filesystem::path& root, const std::string&
 		}
 	}
 }
+
+std::string asCamelCaseString(std::string source) {
+	bool active = true;
+
+	for (int i = 0; source[i] != '\0'; i++) {
+		if (std::isalpha(source[i])) {
+			if (active) {
+				source[i] = std::toupper(source[i]);
+				active = false;
+			}
+			else {
+				source[i] = std::tolower(source[i]);
+			}
+		}
+		else if (source[i] == ' ') {
+			active = true;
+		}
+	}
+
+	return source;
+}

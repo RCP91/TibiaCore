@@ -1,5 +1,5 @@
 # GIMUD - Graphical Interface Multi User Dungeon
-# gen-post.ndb:  Datenbank für generischen Banker
+# gen-post.ndb:  Datenbank fï¿½r generischen Banker
 # Verwendete Topics: 91 bis 99
 # Topic 91(96): Gold -> Platinum
 # Topic 92(97):         Platinum <- Crystal
@@ -82,3 +82,59 @@ Topic=99                            -> "Well, can I help you with something else
 #Topic=99,"yes",Count(3035)>=Price  -> "Here you are.", Create(3043), Amount=Price, Delete(3035)
 #Topic=99,"yes"                     -> "Sorry, you don't have so many platinum coins."
 #Topic=99                           -> "Well, can I help you with something else?"
+
+# Bank System
+"balance" -> Price=Balance, "Your bank balance is %P gold coins."
+
+"deposit" -> "Tell me how much you would like to deposit on your bank account?", Topic=201
+"deposit","all",CountMoney>0 -> Amount=CountMoney, "So you would like me to deposit %A gold coins to your bank account?", Topic=202
+"deposit","all" -> "You do not carry any gold with you."
+
+Topic=201,%1,0<%1 -> Amount=%1, "So I should deposit %A gold coins to your bank account?", Topic=202
+"deposit",%1,0<%1 -> *
+Topic=201 -> "Maybe some other time then."
+
+Topic=202,CountMoney>=Amount,"yes" -> Price=Amount, "I have deposited %A to your bank account.", DeleteMoney, Deposit(Amount)
+Topic=202,"yes" -> "You do not have enough money."
+Topic=202 -> "Maybe some other time then."
+
+# Withdraw
+
+"withdraw" -> "How much gold would you like to withdraw from your bank account?", Topic=203
+
+Topic=203,%1,0<%1 -> Amount=%1, "So you want to withdraw %A gold coins from your bank account?", Topic=214
+
+"withdraw",%1,0<%1 -> *  # Handle other cases or invalid inputs
+
+"withdraw","all" -> Amount=Balance, "So you would like me to give %A gold coins from your bank account?", Topic=213
+
+"withdraw","all", Balance<1 -> "You have none."  # This handles cases where the balance is zero or less
+
+Topic=213,"yes", Balance<Amount -> "You have none."  # This checks if the balance is less than the amount to withdraw
+Topic=213,"yes" -> "Here you are.", Withdraw(Amount), Price=Amount, CreateMoney
+
+Topic=214,"yes", Balance<Amount -> "You do not have enough balance in your bank account."  # Check balance before processing withdrawal
+Topic=214,"yes" -> "Here you are.", Withdraw(Amount), Price=Amount, CreateMoney
+
+Topic=214 -> "Maybe some other time then."  # Handle cases where the user does not confirm the withdrawal
+
+# Transfer
+
+"transfer" -> "Please tell me the amount of gold you would like to transfer.", Topic=85
+"transfer","0","to" -> "Please think about it. Okay?"
+"transfer",$1,0<$1,"to",Balance<$1 -> "There is not enough gold on your account."
+"transfer",$1,0<$1,"to",Balance>=$1,TransferToPlayerNameState=2 -> Price=$1, "Would you really like to transfer %P gold to %S?", Topic=88
+"transfer",$1,0<$1,"to",Balance>=$1,TransferToPlayerNameState=1 -> "I'm afraid this character only holds a junior account at our bank. Do not worry, though. Once he has chosen his vocation or is no longer on Rookgaard, his account will be upgraded."
+"transfer",$1,0<$1,"to",Balance>=$1,TransferToPlayerNameState=0 -> "This player does not exist."
+Topic=85,$1,0<$1,Balance>=$1 -> Price=$1, "Who would you like transfer %P gold to?", Topic=86
+Topic=85,"0" -> "Please think about it. Okay?"
+Topic=85,$1,0<$1,Balance<$1 -> "There is not enough gold on your account."
+Topic=86,Balance>=Price,TransferToPlayerNameState=2 -> "Would you really like to transfer %P gold to %S?", Topic=87
+Topic=86,Balance>=Price,TransferToPlayerNameState=1 -> "I'm afraid this character only holds a junior account at our bank. Do not worry, though. Once he has chosen his vocation or is no longer on Rookgaard, his account will be upgraded."
+Topic=86,Balance>=Price,TransferToPlayerNameState=0 -> "This player does not exist."
+Topic=87,"yes",Balance>=Price -> "You have transferred %P gold to %S.", Transfer(Price)
+Topic=87,"yes" -> "I am inconsolable, but it seems you don't have that many gold in your bank account."
+Topic=87 -> "Ok. What is next?"
+Topic=88,"yes",Balance>=Price -> "Very well. You have transferred %P gold to %S.", Transfer(Price)
+Topic=88,"yes" -> "I am inconsolable, but it seems you don't have that many gold in your bank account."
+Topic=88 -> "Alright, is there something else I can do for you?"
