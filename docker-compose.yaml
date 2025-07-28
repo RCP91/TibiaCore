@@ -3,12 +3,11 @@ services:
     image: mysql:8.0
     container_name: db
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: tibiacore
     volumes:
       - tibiacore_data:/var/lib/mysql
       - ./tibiacore.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro
     ports:
       - "3306:3306"
 
@@ -23,23 +22,21 @@ services:
       DB_HOST: db
       DB_NAME: tibiacore
       DB_USER: root
-      DB_PASSWORD_FILE: /run/secrets/mysql_root_password
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - ./myaac-1.7.1/:/var/www/html/:rw
-      - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro 
       - ./config.lua:/var/www/html/config.lua:rw
       - ./tibiacore.sql:/docker-entrypoint-initdb.d/init.sql
       - ./data/:/var/www/html/data/:rw
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: myaac-phpmyadmin
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "8080:80"
-    volumes:
-      - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro
 
   tibiacore_game:
     build:
@@ -52,12 +49,12 @@ services:
       DB_HOST: db
       DB_NAME: tibiacore
       DB_USER: root
-      DB_PASSWORD_FILE: /run/secrets/mysql_root_password
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro
       - ./data/:/game/data/:rw
     ports:
       - "7171:7171"
       - "7172:7172"
+
 volumes:
   tibiacore_data:
