@@ -41,5 +41,23 @@ services:
     volumes:
       - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro
 
+  tibiacore_game:
+    build:
+      context: .
+      dockerfile: Dockerfile.tibiaImage
+    container_name: tibiacore-game
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: tibiacore
+      DB_USER: root
+      DB_PASSWORD_FILE: /run/secrets/mysql_root_password
+    volumes:
+      - ./mysql_root_password.txt:/run/secrets/mysql_root_password:ro
+      - ./data/:/game/data/:rw
+    ports:
+      - "7171:7171"
+      - "7172:7172"
 volumes:
   tibiacore_data:
