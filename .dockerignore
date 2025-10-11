@@ -1,0 +1,41 @@
+# VCS
+.git
+.gitignore
+
+# Build and cache
+build/
+**/build/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+
+# Binaries
+**/*.o
+**/*.a
+**/*.so
+**/*.dll
+**/*.dylib
+**/*.exe
+compiler/build/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.user
+
+# Logs and dumps
+logs/
+core
+core.*
+
+# Local configs/secrets
+mysql_root_password.txt
+key.pem
+
+# Node/vendor (web assets)
+myaac-1.7.1/node_modules/
+myaac-1.7.1/vendor/
+**/node_modules/
+**/vendor/

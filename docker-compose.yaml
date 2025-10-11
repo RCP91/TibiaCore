@@ -43,6 +43,7 @@ services:
       context: .
       dockerfile: Dockerfile.tibiaImage
     container_name: tibiacore-game
+    restart: unless-stopped
     depends_on:
       - db
     environment:
@@ -51,7 +52,10 @@ services:
       DB_USER: root
       DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - ./data/:/game/data/:rw
+      # Mount world and scripts into the expected repo layout
+      - ./data/:/opt/TibiaCore/data/:rw
+      - ./config.lua:/opt/TibiaCore/config.lua:rw
+      - ./logs/:/opt/TibiaCore/logs/:rw
     ports:
       - "7171:7171"
       - "7172:7172"

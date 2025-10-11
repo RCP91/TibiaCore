@@ -1,0 +1,46 @@
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: c++17
+
+# Line length and indentation
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Braces and spacing
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: False
+SpaceBeforeParens: ControlStatements
+
+# Includes
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^"compiler/src/'
+    Priority: 1
+  - Regex: '^"'
+    Priority: 2
+  - Regex: '^<boost/'
+    Priority: 3
+  - Regex: '^<pugixml'
+    Priority: 4
+  - Regex: '^<'
+    Priority: 5
+SortIncludes: true
+
+# Pointers and references
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Comments
+ReflowComments: true
+
+# Namespaces
+FixNamespaceComments: true
+NamespaceIndentation: None
+
+# Others
+DerivePointerAlignment: false
+Cpp11BracedListStyle: true

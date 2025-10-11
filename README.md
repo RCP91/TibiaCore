@@ -1,3 +1,6 @@
+## Instructions
+
+For detailed engineering guidelines, please refer to [INSTRUCTIONS.md](INSTRUCTIONS.md).
 # How Compiler
 ### Microsoft Visual Studio 2017 or higher for Windows
 <details>
